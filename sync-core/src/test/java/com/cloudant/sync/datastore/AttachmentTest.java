@@ -20,8 +20,6 @@ import com.cloudant.sync.sqlite.SQLQueueCallable;
 import com.cloudant.sync.util.Misc;
 import com.cloudant.sync.util.TestUtils;
 
-import static org.hamcrest.CoreMatchers.is;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,8 +27,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -66,6 +62,11 @@ public class AttachmentTest extends BasicDatastoreTestBase {
             SavedAttachment savedAtt2 = (SavedAttachment) datastore.attachmentsForRevision
                     (newRevision).get(0);
             Assert.assertArrayEquals(expectedSha1, savedAtt2.key);
+
+            //Assert file length and saved attachment length
+            long expectedLength = f.length();
+            Assert.assertEquals(expectedLength,savedAtt.getSize());
+            Assert.assertEquals(expectedLength,savedAtt2.getSize());
         } catch (FileNotFoundException fnfe) {
             Assert.fail("FileNotFoundException thrown " + fnfe);
         } finally {
